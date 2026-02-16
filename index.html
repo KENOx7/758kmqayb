@@ -306,11 +306,11 @@
                     if (count > 0) {
                         classes = "py-3 px-2 text-center transition-colors cursor-pointer hover:bg-gray-700 font-bold text-lg ";
                         click = `onclick="showSubjectDetails('${student}', '${sub}')"`;
-                        if (count > limit) classes += "text-red-500 animate-pulse";
-                        else if (count === limit) classes += "text-red-400";
+                        if (count >= limit) classes += "text-red-500 animate-pulse";
+                        else if (count === limit - 1) classes += "text-red-400";
                         else if (count >= limit - 2) classes += "text-orange-400";
                         else classes += "text-yellow-400";
-                        if (count > limit) display += `<div class="text-[9px] text-red-500">KƏSİLDİ</div>`;
+                        if (count >= limit) display += `<div class="text-[9px] text-red-500">KƏSİLDİ</div>`;
                     }
                     tbodyHTML += `<td ${click} class="${classes}">${display}</td>`;
                 });
@@ -321,8 +321,8 @@
                     if (count > 0) {
                         hasAbsence = true; const limit = getLimit(sub);
                         let barColor = "bg-blue-600", textColor = "text-gray-300", badge = "";
-                        if (count > limit) { barColor = "bg-red-600"; textColor = "text-red-500"; badge = "KƏSİLDİ"; }
-                        else if (count === limit) { barColor = "bg-red-500"; textColor = "text-red-400"; }
+                        if (count >= limit) { barColor = "bg-red-600"; textColor = "text-red-500"; badge = "KƏSİLDİ"; }
+                        else if (count === limit - 1) { barColor = "bg-red-500"; textColor = "text-red-400"; }
                         else if (count >= limit - 2) { barColor = "bg-orange-500"; textColor = "text-orange-400"; }
                         const pct = Math.min((count / limit) * 100, 100);
                         subHTML += `<div class="mb-3 cursor-pointer p-2 rounded border border-gray-700 hover:border-gray-600" onclick="showSubjectDetails('${student}', '${sub}')">
@@ -378,3 +378,4 @@
 </body>
 
 </html>
+
