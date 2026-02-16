@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="az">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>758/KM - Qayıblar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- İkonlar üçün Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #111827; /* Original tünd rəng */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
             color: #e5e7eb;
         }
-        
-        /* Scrollbar dizaynı */
-        ::-webkit-scrollbar { width: 8px; height: 8px;}
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-        
-        /* DESKTOP CƏDVƏL STİLLƏRİ */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
         .desktop-table-container {
             overflow-x: auto;
             border: 1px solid #374151;
@@ -31,7 +42,7 @@
 
         table {
             width: 100%;
-            border-collapse: separate; 
+            border-collapse: separate;
             border-spacing: 0;
         }
 
@@ -49,7 +60,6 @@
             vertical-align: middle;
         }
 
-        /* İlk sütun (Ad Soyad) sabit qalsın */
         .sticky-col-header {
             position: sticky;
             left: 0;
@@ -74,150 +84,114 @@
         tbody tr:hover {
             background-color: #1f2937;
         }
-        
-        /* Kart animasiyaları (Mobil üçün) */
-        .student-card {
-            transition: all 0.2s ease;
-        }
-        .student-card:active {
-            transform: scale(0.98);
-        }
-
-        /* Highlight Animation */
-        @keyframes highlight-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.2); }
-            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
-        .highlight-target {
-            animation: highlight-pulse 2s infinite;
-            border: 2px solid #3b82f6 !important;
-            z-index: 5;
-            position: relative;
-        }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
-
-    <!-- Header Bölməsi -->
     <header class="bg-gray-800 border-b border-gray-700 shadow-lg z-40 relative">
-        <div class="max-w-full mx-auto px-4 py-4 flex justify-between items-center">
-            
-            <!-- Sol: Qrup -->
-            <div class="bg-blue-600 text-white font-bold px-3 py-1 rounded shadow-lg">
-                758/KM
+        <div class="max-w-full mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 text-white font-bold px-3 py-1 rounded shadow-lg">758/KM</div>
+                <h1
+                    class="text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                    Davamiyyət</h1>
             </div>
-
-            <!-- Mərkəz: Başlıq -->
-            <h1 class="hidden md:block text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                Davamiyyət Sistemi
-            </h1>
-            <h1 class="block md:hidden text-lg font-bold text-white">Qayıblar</h1>
-
-            <!-- Sağ: Reytinq -->
-            <button id="open-ranking" class="flex items-center gap-2 bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold transition-transform active:scale-95 shadow-lg">
-                <i class="ph ph-trophy text-xl"></i>
-                <span class="hidden sm:inline">Reytinq</span>
-            </button>
+            <div class="flex items-center gap-2">
+                <select id="semester-select"
+                    class="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-lg">
+                    <option value="" disabled selected>Semestr Yüklənir...</option>
+                </select>
+                <button id="open-ranking"
+                    class="flex items-center gap-2 bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold transition-transform active:scale-95 shadow-lg"><i
+                        class="ph ph-trophy text-xl"></i><span class="hidden sm:inline">Reytinq</span></button>
+            </div>
         </div>
     </header>
 
-    <!-- Sən kimsən? Bölməsi -->
     <div class="w-full px-4 mt-6 mb-4">
-        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+        <div
+            class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="p-2 bg-blue-500/20 rounded text-blue-400">
-                    <i class="ph ph-user-focus text-2xl"></i>
-                </div>
+                <div class="p-2 bg-blue-500/20 rounded text-blue-400"><i class="ph ph-user-focus text-2xl"></i></div>
                 <div>
                     <h3 class="font-bold text-gray-200">Sən kimsən?</h3>
                     <p id="saved-identity-text" class="text-xs text-gray-500">Seçim edilməyib</p>
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                <select id="student-select" class="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 outline-none">
+                <select id="student-identity-select"
+                    class="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 outline-none">
                     <option value="">Tələbə seçin...</option>
                 </select>
                 <div class="flex gap-2">
-                    <button id="save-identity-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
-                        Yadda saxla
-                    </button>
-                    <button id="find-me-btn" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-semibold transition-colors hidden flex items-center justify-center gap-2">
-                        <i class="ph ph-magnifying-glass"></i> Tap
-                    </button>
+                    <button id="save-identity-btn"
+                        class="flex-1 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">Yadda
+                        saxla</button>
+                    <button id="find-me-btn"
+                        class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-semibold transition-colors hidden flex items-center justify-center gap-2"><i
+                            class="ph ph-magnifying-glass"></i> Tap</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bu gün qayıb alanlar (Tam Ekran) -->
     <div id="todays-absences-container" class="w-full px-4 mt-6 hidden">
         <div class="bg-gray-800 rounded-xl border border-red-500/30 overflow-hidden shadow-2xl">
             <div class="bg-red-900/20 p-3 border-b border-red-500/20">
-                <h3 class="text-red-400 font-bold flex items-center gap-2">
-                    <i class="ph ph-warning-circle text-xl"></i> Bu gün qayıb alanlar
-                </h3>
+                <h3 class="text-red-400 font-bold flex items-center gap-2"><i class="ph ph-warning-circle text-xl"></i>
+                    Bu gün qayıb alanlar</h3>
             </div>
-            <div id="todays-absences-list" class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- JS -->
-            </div>
+            <div id="todays-absences-list"
+                class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </div>
     </div>
 
-    <!-- Əsas Məzmun -->
     <main class="flex-grow w-full px-4 pb-20">
-        
-        <!-- Yüklənmə -->
-        <div id="loading-message" class="flex flex-col items-center justify-center py-20 text-gray-500">
-            <i class="ph ph-spinner animate-spin text-4xl text-blue-500 mb-4"></i>
+        <div id="loading-message" class="flex flex-col items-center justify-center py-20 text-gray-500"><i
+                class="ph ph-spinner animate-spin text-4xl text-blue-500 mb-4"></i>
             <p>Məlumatlar yüklənir...</p>
         </div>
-
-        <!-- MOBILE VIEW (Kartlar - yalnız kiçik ekranda) -->
-        <div id="mobile-view" class="grid grid-cols-1 md:hidden gap-4">
-            <!-- JS -->
+        <div id="no-data-message" class="hidden flex flex-col items-center justify-center py-20 text-gray-500"><i
+                class="ph ph-folder-open text-4xl text-gray-600 mb-4"></i>
+            <p>Bu semestr üçün məlumat tapılmadı.</p>
         </div>
-
-        <!-- DESKTOP VIEW (Cədvəl - yalnız böyük ekranda) -->
-        <div id="desktop-view" class="hidden md:block desktop-table-container max-h-[70vh]">
-            <table>
-                <thead>
-                    <!-- JS -->
-                </thead>
-                <tbody id="desktop-tbody" class="divide-y divide-gray-700">
-                    <!-- JS -->
-                </tbody>
-            </table>
+        <div id="content-area" class="hidden">
+            <div id="mobile-view" class="grid grid-cols-1 md:hidden gap-4"></div>
+            <div id="desktop-view" class="hidden md:block desktop-table-container max-h-[70vh]">
+                <table>
+                    <thead></thead>
+                    <tbody id="desktop-tbody" class="divide-y divide-gray-700"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 
-    <!-- Footer / Geri -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="window.location.href='https://758km.vercel.app/'" 
-        class="bg-gray-700 hover:bg-gray-600 text-white w-14 h-14 rounded-full shadow-2xl border border-gray-500 flex items-center justify-center transition-transform hover:-translate-y-1">
-            <i class="ph ph-arrow-u-up-left text-2xl"></i>
-        </button>
+        <a href="https://758km.vercel.app/"
+            class="bg-gray-700 hover:bg-gray-600 text-white w-14 h-14 rounded-full shadow-2xl border border-gray-500 flex items-center justify-center transition-transform hover:-translate-y-1"><i
+                class="ph ph-arrow-u-up-left text-2xl"></i></a>
     </div>
 
-    <!-- Modallar -->
-    <div id="details-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[60]">
-        <div class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col">
+    <div id="details-modal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[60]">
+        <div
+            class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h2 id="modal-title" class="text-lg font-bold text-white">Detallar</h2>
-                <button id="close-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <h2 id="modal-title" class="text-lg font-bold text-white">Detallar</h2><button id="close-modal"
+                    class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
             <div id="modal-list-body" class="p-6 overflow-y-auto"></div>
         </div>
     </div>
 
-    <div id="ranking-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[60]">
-        <div class="bg-gray-800 border border-yellow-500/30 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col">
+    <div id="ranking-modal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[60]">
+        <div
+            class="bg-gray-800 border border-yellow-500/30 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900/50 rounded-t-2xl">
-                <div class="flex items-center gap-2">
-                    <i class="ph ph-trophy-fill text-yellow-400 text-xl"></i>
+                <div class="flex items-center gap-2"><i class="ph ph-trophy-fill text-yellow-400 text-xl"></i>
                     <h2 class="text-lg font-bold text-white">Qayıb Reytinqi</h2>
-                </div>
-                <button id="close-ranking" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div><button id="close-ranking" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
             <div id="ranking-list-body" class="overflow-y-auto divide-y divide-gray-700"></div>
         </div>
@@ -225,383 +199,182 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { SystemManager } from "./firestore_manager.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDdYmo4G--U-6l2U0tqKEP-kZS66-2kaqM",
-            authDomain: "qayiblarkm.firebaseapp.com",
-            projectId: "qayiblarkm",
-            storageBucket: "qayiblarkm.appspot.com",
-            messagingSenderId: "1090200539455",
-            appId: "1:1090200539455:web:5d0dfdceaf2148ebf5438a",
-            measurementId: "G-5X0FHP3D3B"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAtQ_laoPhn_31RgUFp5hkHPzAcYJSH9_8", authDomain: "davamiyyet-sistemi.firebaseapp.com", projectId: "davamiyyet-sistemi", storageBucket: "davamiyyet-sistemi.appspot.com", messagingSenderId: "773549402059", appId: "1:773549402059:web:25286906aa1d998041f84e", measurementId: "G-M3Y8QZCM8C" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app); const manager = new SystemManager(db); const currentGroupId = "758_KM";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const semesterSelect = document.getElementById('semester-select'), loadingMessage = document.getElementById('loading-message'), noDataMessage = document.getElementById('no-data-message'), contentArea = document.getElementById('content-area');
+        const mobileView = document.getElementById('mobile-view'), desktopViewHead = document.querySelector('#desktop-view thead'), desktopViewBody = document.getElementById('desktop-tbody');
+        const studentIdentitySelect = document.getElementById('student-identity-select'), saveIdentityBtn = document.getElementById('save-identity-btn'), findMeBtn = document.getElementById('find-me-btn'), savedIdentityText = document.getElementById('saved-identity-text');
+        const detailsModal = document.getElementById('details-modal'), closeModalBtn = document.getElementById('close-modal'), modalTitle = document.getElementById('modal-title'), modalBody = document.getElementById('modal-list-body');
+        const rankingModal = document.getElementById('ranking-modal'), openRankingBtn = document.getElementById('open-ranking'), closeRankingBtn = document.getElementById('close-ranking'), rankingBody = document.getElementById('ranking-list-body');
+        const todaysContainer = document.getElementById('todays-absences-container'), todaysList = document.getElementById('todays-absences-list');
 
-        // DOM
-        const loadingMessage = document.getElementById('loading-message');
-        const mobileView = document.getElementById('mobile-view');
-        const desktopViewHead = document.querySelector('#desktop-view thead');
-        const desktopViewBody = document.getElementById('desktop-tbody');
-        
-        // Identity
-        const studentSelect = document.getElementById('student-select');
-        const saveIdentityBtn = document.getElementById('save-identity-btn');
-        const findMeBtn = document.getElementById('find-me-btn');
-        const savedIdentityText = document.getElementById('saved-identity-text');
+        let studentsList = [], subjectsList = [], allAbsences = [], processedData = {}, subjectLimits = {};
 
-        // Modals
-        const detailsModal = document.getElementById('details-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-list-body');
-        
-        const rankingModal = document.getElementById('ranking-modal');
-        const openRankingBtn = document.getElementById('open-ranking');
-        const closeRankingBtn = document.getElementById('close-ranking');
-        const rankingBody = document.getElementById('ranking-list-body');
-
-        const todaysContainer = document.getElementById('todays-absences-container');
-        const todaysList = document.getElementById('todays-absences-list');
-
-        // Data
-        const students = [
-            "Abbasov Nurəli", "Abdullayeva Aytac", "Abdullazadə Bayram", "Ağabalayev Nihat", "Bağışlı Kənan", 
-            "Bayramov Əli", "Bayramov Rəşad", "Cəfərov Əli", "Ələsgərova Səbinə", "Əliyev Cəfər", "Əzimli Şamil", 
-            "Hacıyeva Şəfa", "Heydərov Nihad", "Hüseynova Jalə", "Kərimli Amin", "Kərimli Hüseyin", "Mahmudov Elmir", 
-            "Məlikov İlkin", "Məmmədov Əvəz", "Sadıqova Zəhra", "Xanmuradov Alpay", "Salayev Turan"
-        ];
-        
-        const subjects = [
-            "Ehtimal nəzəriyyəsi və statistika", "Verilənlər bazası sistemləri", "Proqramlaşdırmanın əsasları-2",
-            "XDİAK-3", "Kompüter arxitekturası-1", "Dövrlər nəzəriyyəsi"
-        ];
-        
-        const subjectLimits = {
-            "Ehtimal nəzəriyyəsi və statistika": 6, 
-            "Verilənlər bazası sistemləri": 10, 
-            "Proqramlaşdırmanın əsasları-2": 6,
-            "XDİAK-3": 8, 
-            "Kompüter arxitekturası-1": 6, 
-            "Dövrlər nəzəriyyəsi": 8
-        };
-
-        let allAbsences = [];
-        let processedData = {};
-
-        // Identity Functions
-        function initIdentityFeature() {
-            students.sort().forEach(st => {
-                const option = document.createElement('option');
-                option.value = st;
-                option.textContent = st;
-                studentSelect.appendChild(option);
-            });
-
-            const savedName = localStorage.getItem('myAttendanceIdentity_KM');
-            if (savedName) {
-                updateIdentityUI(savedName);
-                studentSelect.value = savedName;
-            }
-
-            saveIdentityBtn.addEventListener('click', () => {
-                const selected = studentSelect.value;
-                if (selected) {
-                    localStorage.setItem('myAttendanceIdentity_KM', selected);
-                    updateIdentityUI(selected);
-                    saveIdentityBtn.textContent = "Saxlandı!";
-                    setTimeout(() => saveIdentityBtn.textContent = "Yadda saxla", 1500);
+        async function init() {
+            try {
+                await signInAnonymously(auth);
+                let active = null;
+                try { active = await manager.getActiveSemester(); } catch (e) { }
+                semesterSelect.innerHTML = '';
+                if (active) {
+                    const opt = document.createElement('option'); opt.value = active.id; opt.textContent = `${active.name} (Aktiv)`; opt.selected = true; semesterSelect.appendChild(opt);
                 }
-            });
-
-            findMeBtn.addEventListener('click', () => {
-                const savedName = localStorage.getItem('myAttendanceIdentity_KM');
-                if (savedName) scrollToStudent(savedName);
-            });
-        }
-
-        function updateIdentityUI(name) {
-            savedIdentityText.innerHTML = `Seçili: <span class="text-blue-400 font-bold">${name}</span>`;
-            findMeBtn.classList.remove('hidden');
-        }
-
-        function scrollToStudent(name) {
-            const row = document.querySelector(`tr[data-student-row="${name}"]`);
-            const card = document.querySelector(`div[data-student-card="${name}"]`);
-            
-            let target = (window.getComputedStyle(mobileView).display !== 'none') ? card : row;
-
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                target.classList.add('highlight-target');
-                setTimeout(() => target.classList.remove('highlight-target'), 3000);
-            } else {
-                alert("Məlumat tapılmadı.");
+                const optLegacy = document.createElement('option'); optLegacy.value = 'legacy_archive'; optLegacy.textContent = "Köhnə Arxiv"; semesterSelect.appendChild(optLegacy);
+                if (!active) semesterSelect.selectedIndex = 0;
+                semesterSelect.addEventListener('change', () => loadData(semesterSelect.value));
+                loadData(semesterSelect.value);
+            } catch (e) {
+                loadingMessage.innerText = "Xəta: " + e.message;
             }
         }
 
-        initIdentityFeature();
+        async function loadData(semesterId) {
+            loadingMessage.style.display = 'flex'; contentArea.classList.add('hidden'); noDataMessage.classList.add('hidden');
+            try {
+                const dbStudents = await manager.getAllStudents(currentGroupId);
+                const staticStudents = [
+                    "Abbasov Nurəli", "Abdullayeva Aytac", "Abdullazadə Bayram", "Ağabalayev Nihat", "Bağışlı Kənan",
+                    "Bayramov Əli", "Bayramov Rəşad", "Cəfərov Əli", "Ələsgərova Səbinə", "Əliyev Cəfər", "Əzimli Şamil",
+                    "Hacıyeva Şəfa", "Heydərov Nihad", "Hüseynova Jalə", "Kərimli Amin", "Kərimli Hüseyin", "Mahmudov Elmir",
+                    "Məlikov İlkin", "Məmmədov Əvəz", "Sadıqova Zəhra", "Xanmuradov Alpay", "Salayev Turan"
+                ];
+                studentsList = dbStudents.length > 0 ? dbStudents : staticStudents;
 
-        // Firebase Listener
-        const q = query(collection(db, "qayiblar"), orderBy("timestamp", "desc"));
-        onSnapshot(q, (querySnapshot) => {
-            allAbsences = querySnapshot.docs.map(doc => doc.data());
-            processData();
-            updateUI();
-            updateRanking();
-            checkTodaysAbsences();
-            loadingMessage.style.display = 'none';
-        });
+                populateIdentitySelect();
+                if (semesterId === 'legacy_archive') {
+                    subjectsList = ["Ehtimal nəzəriyyəsi və statistika", "Verilənlər bazası sistemləri", "Proqramlaşdırmanın əsasları-2", "XDİAK-3", "Kompüter arxitekturası-1", "Dövrlər nəzəriyyəsi"];
+                    subjectLimits = {};
+                    allAbsences = []; // No legacy manager method really works for this specific group's old structure easily, assume empty or need custom
+                    processData(); updateUI(); updateRanking(); loadingMessage.style.display = 'none'; contentArea.classList.remove('hidden');
+                } else {
+                    const result = await manager.getGroupSubjects(semesterId, currentGroupId);
+                    subjectsList = result.subjects || [];
+                    subjectLimits = result.limits || {};
+                    const q = query(collection(db, "absences_log"), where("semesterId", "==", semesterId));
+                    onSnapshot(q, (snapshot) => {
+                        allAbsences = snapshot.empty ? [] : snapshot.docs
+                            .map(d => ({ id: d.id, ...d.data() }))
+                            .filter(d => {
+                                // Match Filter Logic from admin.html
+                                if (d.groupId && d.groupId !== currentGroupId) return false;
+                                if (!d.groupId && !studentsList.includes(d.studentName)) return false;
+                                return true;
+                            })
+                            .sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
+                        processData(); updateUI(); updateRanking(); checkTodaysAbsences();
+                        loadingMessage.style.display = 'none'; contentArea.classList.remove('hidden');
+                        if (allAbsences.length === 0 && studentsList.length === 0 && subjectsList.length === 0) noDataMessage.classList.remove('hidden');
+                    });
+                }
+            } catch (e) { loadingMessage.innerText = "Yüklənmə xətası."; }
+        }
+
+        function populateIdentitySelect() {
+            studentIdentitySelect.innerHTML = '<option value="">Tələbə seçin...</option>';
+            studentsList.sort().forEach(st => { const opt = document.createElement('option'); opt.value = st; opt.textContent = st; studentIdentitySelect.appendChild(opt); });
+            const saved = localStorage.getItem('myAttendanceIdentity_KM');
+            if (saved) { updateIdentityUI(saved); studentIdentitySelect.value = saved; }
+        }
 
         function processData() {
             processedData = {};
-            students.forEach(student => {
-                processedData[student] = { total: 0, subjects: {} };
-                subjects.forEach(sub => processedData[student].subjects[sub] = 0);
-            });
-
+            studentsList.forEach(st => { processedData[st] = { total: 0, subjects: {} }; subjectsList.forEach(sub => processedData[st].subjects[sub] = 0); });
             allAbsences.forEach(abs => {
-                if (processedData[abs.usaqAdi] && processedData[abs.usaqAdi].subjects[abs.fenn] !== undefined) {
-                    processedData[abs.usaqAdi].subjects[abs.fenn]++;
-                    processedData[abs.usaqAdi].total++;
-                }
+                const st = abs.studentName;
+                if (!processedData[st]) { processedData[st] = { total: 0, subjects: {} }; subjectsList.forEach(sub => processedData[st].subjects[sub] = 0); if (!studentsList.includes(st)) studentsList.push(st); }
+                if (processedData[st].subjects[abs.subject] !== undefined) { processedData[st].subjects[abs.subject]++; processedData[st].total++; }
+                else { processedData[st].subjects[abs.subject] = 1; processedData[st].total++; if (!subjectsList.includes(abs.subject)) subjectsList.push(abs.subject); }
             });
         }
 
         function updateUI() {
-            // DESKTOP TABLE HEADER
-            let theadHTML = `<tr><th class="sticky-col-header py-4 px-4 text-left whitespace-nowrap">Ad Soyad</th>`;
-            subjects.forEach(sub => {
-                theadHTML += `<th class="py-3 px-4 text-center font-semibold min-w-[220px] whitespace-nowrap">
-                    <div class="text-gray-200">${sub}</div>
-                    <div class="text-xs text-yellow-500 font-mono mt-1">Limit: ${subjectLimits[sub]}</div>
-                </th>`;
-            });
-            theadHTML += `</tr>`;
-            desktopViewHead.innerHTML = theadHTML;
-
-            // DESKTOP & MOBILE BODY
-            let tbodyHTML = '';
-            let mobileHTML = '';
-
-            students.forEach(student => {
+            const getLimit = (sub) => subjectLimits[sub] || 7;
+            desktopViewHead.innerHTML = `<tr><th class="sticky-col-header py-4 px-4 text-left whitespace-nowrap">Ad Soyad</th>${subjectsList.map(sub => `<th class="py-3 px-4 text-center font-semibold min-w-[200px]"><div class="text-gray-200">${sub}</div><div class="text-xs text-yellow-500 font-mono mt-1">Limit: ${getLimit(sub)}</div></th>`).join('')}</tr>`;
+            let tbodyHTML = '', mobileHTML = '';
+            studentsList.sort();
+            studentsList.forEach(student => {
                 const data = processedData[student];
-                
-                // DESKTOP ROW
-                tbodyHTML += `<tr data-student-row="${student}" class="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
-                    <td class="sticky-col-cell py-4 px-4 font-medium text-gray-200 whitespace-nowrap cursor-pointer hover:text-blue-400" 
-                        onclick="showAllDetails('${student}')">
-                        ${student}
-                    </td>`;
-                
-                subjects.forEach(sub => {
-                    const count = data.subjects[sub];
-                    const limit = subjectLimits[sub];
-                    let styleClass = "text-gray-500";
-                    let content = count > 0 ? count : "-";
-                    
-                    // Xəta düzəldildi: Class artıq tək bir sətirdə birləşdirilir
-                    let cellClickAttr = "";
-                    let cellClasses = "py-3 px-2 text-center transition-colors"; // text-center burada vacibdir
-
+                tbodyHTML += `<tr data-student-row="${student}" class="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"><td class="sticky-col-cell py-4 px-4 font-medium text-gray-200 whitespace-nowrap cursor-pointer hover:text-blue-400" onclick="showAllDetails('${student}')">${student}</td>`;
+                subjectsList.forEach(sub => {
+                    const count = data.subjects[sub] || 0, limit = getLimit(sub);
+                    let display = count > 0 ? count : "-", classes = "py-3 px-2 text-center transition-colors text-gray-500", click = "";
                     if (count > 0) {
-                        styleClass = "text-yellow-400 font-bold text-lg";
-                        if (count >= limit) {
-                            styleClass = "text-red-500 font-extrabold animate-pulse";
-                            content += `<div class="text-[10px] text-red-500 font-bold mt-1">KƏSİLDİ</div>`;
-                        } else if (count >= limit - 2) {
-                            styleClass = "text-orange-500 font-bold";
-                        }
-                        
-                        // Kliklənə bilən xana üçün
-                        cellClickAttr = `onclick="showSubjectDetails('${student}', '${sub}')"`;
-                        cellClasses += ` cursor-pointer hover:bg-gray-700 ${styleClass}`;
-                    } else {
-                        // Boş xana üçün
-                        cellClasses += ` ${styleClass}`;
+                        classes = "py-3 px-2 text-center transition-colors cursor-pointer hover:bg-gray-700 font-bold text-lg ";
+                        click = `onclick="showSubjectDetails('${student}', '${sub}')"`;
+                        if (count > limit) classes += "text-red-500 animate-pulse";
+                        else if (count === limit) classes += "text-red-400";
+                        else if (count >= limit - 2) classes += "text-orange-400";
+                        else classes += "text-yellow-400";
+                        if (count > limit) display += `<div class="text-[9px] text-red-500">KƏSİLDİ</div>`;
                     }
-
-                    tbodyHTML += `<td ${cellClickAttr} class="${cellClasses}">${content}</td>`;
+                    tbodyHTML += `<td ${click} class="${classes}">${display}</td>`;
                 });
                 tbodyHTML += `</tr>`;
-
-                // MOBILE CARD
-                let subjectsListHTML = '';
-                let hasAbsence = false;
-
-                subjects.forEach(sub => {
-                    const count = data.subjects[sub];
-                    const limit = subjectLimits[sub];
+                let subHTML = '', hasAbsence = false;
+                subjectsList.forEach(sub => {
+                    const count = data.subjects[sub] || 0;
                     if (count > 0) {
-                        hasAbsence = true;
-                        let barColor = "bg-blue-600";
-                        let textColor = "text-gray-300";
-                        
-                        if (count >= limit) { barColor = "bg-red-600"; textColor = "text-red-400 font-bold"; }
+                        hasAbsence = true; const limit = getLimit(sub);
+                        let barColor = "bg-blue-600", textColor = "text-gray-300", badge = "";
+                        if (count > limit) { barColor = "bg-red-600"; textColor = "text-red-500"; badge = "KƏSİLDİ"; }
+                        else if (count === limit) { barColor = "bg-red-500"; textColor = "text-red-400"; }
                         else if (count >= limit - 2) { barColor = "bg-orange-500"; textColor = "text-orange-400"; }
-
-                        const percent = Math.min((count / limit) * 100, 100);
-
-                        subjectsListHTML += `
-                            <div class="mb-3 cursor-pointer active:bg-gray-700 p-2 rounded border border-gray-700 hover:border-gray-600" onclick="showSubjectDetails('${student}', '${sub}')">
-                                <div class="flex flex-col gap-1 mb-2">
-                                    <span class="text-gray-300 text-sm font-medium leading-tight">${sub}</span>
-                                    <span class="${textColor} text-sm">${count} <span class="text-gray-500 text-xs">/ ${limit}</span></span>
-                                </div>
-                                <div class="w-full bg-gray-700 rounded-full h-1.5">
-                                    <div class="${barColor} h-1.5 rounded-full" style="width: ${percent}%"></div>
-                                </div>
-                            </div>
-                        `;
+                        const pct = Math.min((count / limit) * 100, 100);
+                        subHTML += `<div class="mb-3 cursor-pointer p-2 rounded border border-gray-700 hover:border-gray-600" onclick="showSubjectDetails('${student}', '${sub}')">
+                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-300">${sub}</span><span class="text-xs font-bold text-red-500">${badge}</span></div>
+                            <div class="flex justify-between text-xs mb-1"><span class="${textColor}">${count} / ${limit}</span></div>
+                            <div class="h-1.5 bg-gray-700 rounded-full"><div class="${barColor} h-1.5 rounded-full" style="width:${pct}%"></div></div></div>`;
                     }
                 });
-
-                if (!hasAbsence) {
-                    subjectsListHTML = `<div class="text-center py-2 text-green-500 text-sm font-medium bg-green-500/10 rounded-lg">
-                        <i class="ph ph-check-circle mr-1"></i> Qayıb yoxdur
-                    </div>`;
-                }
-
-                mobileHTML += `
-                    <div data-student-card="${student}" class="bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-md student-card">
-                        <div class="flex justify-between items-start mb-4 border-b border-gray-700 pb-3" onclick="showAllDetails('${student}')">
-                            <div>
-                                <h3 class="font-bold text-lg text-white leading-tight">${student}</h3>
-                                <p class="text-xs text-gray-500 mt-1">Tələbə</p>
-                            </div>
-                            <div class="bg-gray-700 px-3 py-1 rounded-full text-center min-w-[3rem]">
-                                <span class="block text-xs text-gray-400">Cəmi</span>
-                                <span class="font-bold ${data.total > 0 ? 'text-white' : 'text-gray-500'}">${data.total}</span>
-                            </div>
-                        </div>
-                        <div>${subjectsListHTML}</div>
-                    </div>
-                `;
+                if (!hasAbsence) subHTML = `<div class="text-center py-2 text-green-500 text-sm bg-green-500/10 rounded">Qayıb yoxdur ✅</div>`;
+                mobileHTML += `<div data-student-card="${student}" class="bg-gray-800 rounded-xl p-4 border border-gray-700 shadow-md"><div class="flex justify-between items-center mb-3 border-b border-gray-700 pb-2" onclick="showAllDetails('${student}')"><h3 class="font-bold text-white">${student}</h3><span class="bg-gray-700 px-2 py-1 rounded text-xs text-white font-bold">${data.total}</span></div><div>${subHTML}</div></div>`;
             });
-
-            desktopViewBody.innerHTML = tbodyHTML;
-            mobileView.innerHTML = mobileHTML;
+            desktopViewBody.innerHTML = tbodyHTML; mobileView.innerHTML = mobileHTML;
         }
 
         function updateRanking() {
-            const sortedStudents = [...students].sort((a, b) => processedData[b].total - processedData[a].total);
-            let rankingHTML = '';
-            
-            sortedStudents.forEach((student, index) => {
-                const total = processedData[student].total;
-                if (total === 0) return;
-
-                let rankStyle = "bg-gray-700 text-gray-400";
-                let rowStyle = "hover:bg-gray-700/50";
-                let icon = `<span class="font-bold">${index + 1}</span>`;
-
-                if (index === 0) {
-                    rankStyle = "bg-yellow-500 text-black shadow-lg shadow-yellow-500/50";
-                    rowStyle = "bg-yellow-500/10 border-l-2 border-yellow-500";
-                    icon = `<i class="ph ph-crown-simple text-lg font-bold"></i>`;
-                } else if (index === 1) {
-                    rankStyle = "bg-gray-300 text-black";
-                    icon = `<span class="font-bold">2</span>`;
-                } else if (index === 2) {
-                    rankStyle = "bg-orange-700 text-white";
-                    icon = `<span class="font-bold">3</span>`;
-                }
-
-                rankingHTML += `
-                    <div class="flex items-center justify-between p-4 ${rowStyle} transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center ${rankStyle}">${icon}</div>
-                            <div class="font-medium text-gray-200">${student}</div>
-                        </div>
-                        <div class="font-mono font-bold text-lg text-white">${total}</div>
-                    </div>
-                `;
+            const sorted = [...studentsList].sort((a, b) => (processedData[b]?.total || 0) - (processedData[a]?.total || 0));
+            let html = '';
+            sorted.forEach((st, idx) => {
+                const total = processedData[st]?.total || 0; if (total === 0) return;
+                let rankClass = "bg-gray-700 text-gray-400", icon = idx + 1;
+                if (idx === 0) { rankClass = "bg-yellow-500 text-black"; icon = "👑"; }
+                html += `<div class="flex justify-between p-3 border-b border-gray-700 last:border-0 hover:bg-gray-700/30"><div class="flex items-center gap-3"><div class="w-8 h-8 flex items-center justify-center rounded-full font-bold ${rankClass}">${icon}</div><span class="text-gray-200 font-medium">${st}</span></div><span class="font-bold text-white text-lg">${total}</span></div>`;
             });
-
-            if (rankingHTML === '') rankingHTML = '<div class="p-8 text-center text-gray-500">Qayıb yoxdur.</div>';
-            rankingBody.innerHTML = rankingHTML;
+            rankingBody.innerHTML = html || '<div class="p-4 text-center text-gray-500">Qayıb yoxdur.</div>';
         }
 
         function checkTodaysAbsences() {
-            const bakuDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Baku" }));
-            const today = bakuDate.toISOString().split('T')[0];
-            const todaysAbsences = allAbsences.filter(a => a.tarix === today);
-
-            if (todaysAbsences.length > 0) {
-                const grouped = {};
-                todaysAbsences.forEach(x => {
-                    if(!grouped[x.usaqAdi]) grouped[x.usaqAdi] = [];
-                    grouped[x.usaqAdi].push(x.fenn);
-                });
-
-                let html = '';
-                for(let st in grouped) {
-                    html += `
-                        <div class="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg">
-                            <span class="font-bold text-lg text-white block mb-2">${st}</span>
-                            <div class="flex flex-wrap gap-1">
-                                ${grouped[st].map(fenn => `<span class="text-red-300 text-xs bg-red-900/40 px-2 py-1 rounded">${fenn}</span>`).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-                todaysList.innerHTML = html;
+            const matchDate = new Date().toISOString().split('T')[0];
+            const todayList = allAbsences.filter(a => a.date === matchDate);
+            if (todayList.length > 0) {
+                const grouped = {}; todayList.forEach(x => { if (!grouped[x.studentName]) grouped[x.studentName] = []; grouped[x.studentName].push(x.subject); });
+                todaysList.innerHTML = Object.keys(grouped).map(st => `<div class="bg-red-500/10 border border-red-500/30 p-3 rounded"><div class="font-bold text-red-200 mb-1">${st}</div><div class="flex flex-wrap gap-1">${grouped[st].map(s => `<span class="text-[10px] bg-red-500/20 text-red-300 px-1 rounded">${s}</span>`).join('')}</div></div>`).join('');
                 todaysContainer.classList.remove('hidden');
-            } else {
-                todaysContainer.classList.add('hidden');
-            }
+            } else { todaysContainer.classList.add('hidden'); }
         }
 
-        // Global Funcs
-        window.showSubjectDetails = (student, subject) => {
-            modalTitle.textContent = student;
-            modalBody.innerHTML = `<div class="mb-4 text-blue-400 font-semibold border-b border-gray-700 pb-2">${subject}</div>`;
-            const filtered = allAbsences.filter(a => a.usaqAdi === student && a.fenn === subject).sort((a, b) => new Date(a.tarix) - new Date(b.tarix));
-            let html = '<div class="grid grid-cols-2 gap-2">';
-            filtered.forEach(item => html += `<div class="bg-gray-700 p-2 rounded text-center text-sm font-mono text-white">${item.tarix}</div>`);
-            html += '</div>';
-            modalBody.innerHTML += html;
-            detailsModal.classList.remove('hidden');
-        };
+        saveIdentityBtn.addEventListener('click', () => { const val = studentIdentitySelect.value; if (val) { localStorage.setItem('myAttendanceIdentity_KM', val); updateIdentityUI(val); saveIdentityBtn.textContent = 'Saxlandı!'; setTimeout(() => saveIdentityBtn.textContent = 'Yadda saxla', 2000); } });
+        findMeBtn.addEventListener('click', () => { const saved = localStorage.getItem('myAttendanceIdentity_KM'); if (saved) { const el = document.querySelector(`[data-student-row="${saved}"]`) || document.querySelector(`[data-student-card="${saved}"]`); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('ring-2', 'ring-blue-500'); setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500'), 3000); } else alert("Siz bu siyahıda yoxsunuz."); } });
+        function updateIdentityUI(name) { savedIdentityText.innerHTML = `Seçili: <span class="text-blue-400 font-bold">${name}</span>`; findMeBtn.classList.remove('hidden'); }
 
+        window.showSubjectDetails = (student, subject) => { modalTitle.textContent = `${student} - ${subject}`; const dates = allAbsences.filter(a => a.studentName === student && a.subject === subject).map(a => a.date).sort(); modalBody.innerHTML = `<div class="grid grid-cols-2 gap-2">${dates.map(d => `<div class="bg-gray-700 p-2 rounded text-center text-sm">${d}</div>`).join('')}</div>`; detailsModal.classList.remove('hidden'); };
         window.showAllDetails = (student) => {
-            modalTitle.textContent = student;
-            modalBody.innerHTML = '';
-            const studentAbsences = allAbsences.filter(a => a.usaqAdi === student);
-            if (studentAbsences.length === 0) {
-                modalBody.innerHTML = '<div class="text-center text-gray-500 py-4">Qayıb tapılmadı.</div>';
-            } else {
-                const grouped = {};
-                studentAbsences.forEach(x => { if(!grouped[x.fenn]) grouped[x.fenn] = []; grouped[x.fenn].push(x.tarix); });
-                for (let sub in grouped) {
-                    grouped[sub].sort();
-                    const div = document.createElement('div');
-                    div.className = "mb-6 last:mb-0";
-                    div.innerHTML = `
-                        <h4 class="text-blue-400 font-medium mb-2 flex justify-between items-center">
-                            ${sub} <span class="bg-blue-900 text-blue-200 px-2 py-0.5 rounded text-xs">${grouped[sub].length}</span>
-                        </h4>
-                        <div class="grid grid-cols-3 gap-2">
-                            ${grouped[sub].map(date => `<div class="bg-gray-700/50 p-1.5 rounded text-center text-xs text-gray-300 font-mono">${date}</div>`).join('')}
-                        </div>
-                    `;
-                    modalBody.appendChild(div);
-                }
-            }
-            detailsModal.classList.remove('hidden');
+            modalTitle.textContent = student; const myAbs = allAbsences.filter(a => a.studentName === student); const grouped = {}; myAbs.forEach(a => { if (!grouped[a.subject]) grouped[a.subject] = []; grouped[a.subject].push(a.date); });
+            let html = Object.keys(grouped).map(sub => `<div class="mb-4"><div class="font-bold text-blue-400 mb-1">${sub} <span class="text-xs text-gray-500">(${grouped[sub].length})</span></div><div class="flex flex-wrap gap-2">${grouped[sub].sort().map(d => `<span class="bg-gray-700 px-2 py-1 rounded text-xs">${d}</span>`).join('')}</div></div>`).join('');
+            modalBody.innerHTML = html || "<p class='text-gray-500 text-center'>Qayıb yoxdur.</p>"; detailsModal.classList.remove('hidden');
         };
 
-        closeModalBtn.addEventListener('click', () => detailsModal.classList.add('hidden'));
-        detailsModal.addEventListener('click', (e) => { if(e.target === detailsModal) detailsModal.classList.add('hidden'); });
-
-        openRankingBtn.addEventListener('click', () => rankingModal.classList.remove('hidden'));
-        closeRankingBtn.addEventListener('click', () => rankingModal.classList.add('hidden'));
-        rankingModal.addEventListener('click', (e) => { if(e.target === rankingModal) rankingModal.classList.add('hidden'); });
+        closeModalBtn.onclick = () => detailsModal.classList.add('hidden');
+        openRankingBtn.onclick = () => rankingModal.classList.remove('hidden');
+        closeRankingBtn.onclick = () => rankingModal.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
+
 </html>
-
-
-
