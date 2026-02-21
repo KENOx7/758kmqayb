@@ -360,7 +360,27 @@
         }
 
         saveIdentityBtn.addEventListener('click', () => { const val = studentIdentitySelect.value; if (val) { localStorage.setItem('myAttendanceIdentity_KM', val); updateIdentityUI(val); saveIdentityBtn.textContent = 'Saxlandı!'; setTimeout(() => saveIdentityBtn.textContent = 'Yadda saxla', 2000); } });
-        findMeBtn.addEventListener('click', () => { const saved = localStorage.getItem('myAttendanceIdentity_KM'); if (saved) { const el = document.querySelector(`[data-student-row="${saved}"]`) || document.querySelector(`[data-student-card="${saved}"]`); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('ring-2', 'ring-blue-500'); setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500'), 3000); } else alert("Siz bu siyahıda yoxsunuz."); } });
+
+        findMeBtn.addEventListener('click', () => {
+            const saved = localStorage.getItem('myAttendanceIdentity_KM');
+            if (saved) {
+                const els = document.querySelectorAll(`[data-student-row="${saved}"], [data-student-card="${saved}"]`);
+                let targetEl = null;
+                for (let el of els) {
+                    if (el.offsetParent !== null) {
+                        targetEl = el;
+                        break;
+                    }
+                }
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetEl.classList.add('ring-2', 'ring-blue-500');
+                    setTimeout(() => targetEl.classList.remove('ring-2', 'ring-blue-500'), 3000);
+                } else {
+                    alert("Siz bu siyahıda yoxsunuz.");
+                }
+            }
+        });
         function updateIdentityUI(name) { savedIdentityText.innerHTML = `Seçili: <span class="text-blue-400 font-bold">${name}</span>`; findMeBtn.classList.remove('hidden'); }
 
         window.showSubjectDetails = (student, subject) => { modalTitle.textContent = `${student} - ${subject}`; const dates = allAbsences.filter(a => a.studentName === student && a.subject === subject).map(a => a.date).sort(); modalBody.innerHTML = `<div class="grid grid-cols-2 gap-2">${dates.map(d => `<div class="bg-gray-700 p-2 rounded text-center text-sm">${d}</div>`).join('')}</div>`; detailsModal.classList.remove('hidden'); };
@@ -378,4 +398,3 @@
 </body>
 
 </html>
-
